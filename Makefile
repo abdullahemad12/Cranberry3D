@@ -11,15 +11,15 @@ INCFLAGS = -I./glm-0.9.7.1 -I./include/ -I/usr/X11R6/include -I/sw/include \
 		-I/usr/sww/include -I/usr/sww/pkg/Mesa/include
 LDFLAGS = -L./lib/nix -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
 		-L/usr/sww/bin -L/usr/sww/pkg/Mesa/lib -lGLEW -lglut -lGLU -lGL -lX11 -lfreeimage
-SRCS = 
+SRCS = ghostHouse.cpp
 OBJS = $(SRCS:.c=.o)
-HDRS = shaders.h geometry3.h
+HDRS = shaders.h
 
 endif
 RM = /bin/rm -f
 all: chickenInvader
 chickenInvader: $(OBJS) $(HDRS) Makefile
-	$(CC) $(CFLAGS) -o chickenInvader $(OBJS) $(INCFLAGS) $(LDFLAGS) 
+	$(CC) $(CFLAGS) -o ghostHouse $(OBJS) $(INCFLAGS) $(LDFLAGS) 
 
 $(OBJS): $(HDRS) Makefile
 
