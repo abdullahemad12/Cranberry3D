@@ -25,5 +25,5 @@ $(OBJS): $(HDRS) Makefile
 
 
 clean: 
-	$(RM) *.o chickenInvader
+	$(RM) *.o ghostHouse
  
