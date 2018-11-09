@@ -14,23 +14,44 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <dimensions.h>
+#include<iostream>
+#include<camera.h>
+#include <FreeImage.h>
 
 float rotAng;
 
-
+Camera* cam;
 /**
   * initilizes the eye and up vectors
   */
 void init(void)
 {
+	const vec3 eye(0.0,0.0,7.0); 
+	const vec3 up(0.0,1.0,0.0);
+	cam = new Camera(eye, up);
+}
 
+void keyboard(unsigned char key,int x,int y) 
+{
+
+
+}
+
+// This function gets called when the window size gets changed
+void reshape(int width,int height){
+	glViewport(0,0,width,height);
+	gluPerspective(90.0f, (float)width / (float) height, 0.1f, 100.0f);
 }
 
 
 
-
-void Display(void) {
+void display(void) 
+{
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+ 	//vec3 center(0.0,0.0,0.0); 
+	//glm::lookAt(cam->getEye(), center, cam->getUp());
+	glClearColor(0,0,1,0);
 
 	glPushMatrix();
 	glRotatef(rotAng, 0, 1, 0);
@@ -46,18 +67,18 @@ void Display(void) {
 	glutSolidSphere(0.5, 25, 25);
 	glPopMatrix();
 
-	glFlush();
+	glutSwapBuffers();
 }
 
-void Anim() {
-	rotAng += 0.01;
+void cleanup(void)
+{
 
-	glutPostRedisplay();
 }
 
 
-int main(int argc,char* argv[]) {
-
+int main(int argc,char* argv[]) 
+{
+	FreeImage_Initialise();
 	//Initialize GLUT
 	glutInit(&argc,argv);
 #ifdef __APPLE__ // OSX systems require an extra flag
@@ -76,26 +97,13 @@ int main(int argc,char* argv[]) {
 
 	init();
 	glutDisplayFunc(display);
-	glutSpecialFunc(specialKey);
 	glutKeyboardFunc(keyboard);
 	glutReshapeFunc(reshape);
-	glutReshapeWindow(w,h);
-
-	if(argc > 1) {
-		allowGrader = true;
-		grader.init(argv[1]);
-		grader.loadCommands(argv[1]);
-		grader.bindDisplayFunc(display);
-		grader.bindSpecialFunc(specialKey);
-		grader.bindKeyboardFunc(keyboard);
-		grader.bindScreenshotFunc(saveScreenshot);
-	}
-
-	printHelp();
-	glutMainLoop();	
-	FreeImage_DeInitialise();
+	glutReshapeWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
+	glutMainLoop();
+	FreeImage_DeInitialise();	
+	gluLookAt(0.0f, 2.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 	cleanup();
-
 	return 0;
 }
 
