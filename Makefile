@@ -13,7 +13,7 @@ LDFLAGS = -L./lib/nix -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
 		-L/usr/sww/bin -L/usr/sww/pkg/Mesa/lib -lGLEW -lglut -lGLU -lGL -lX11 -lfreeimage
 SRCS = ghostHouse.cpp camera.cpp lib/linkedlist.cpp objects/object.cpp
 OBJS = $(SRCS:.c=.o)
-HDRS = shaders.h
+HDRS = 
 
 endif
 RM = /bin/rm -f

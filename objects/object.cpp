@@ -55,6 +55,7 @@ Object::Object(const char* filename)
 	glGenBuffers(1, &this->NBO);
 	glGenBuffers(1, &this->EBO);
 	glGenBuffers(1, &this->CBO);
+	this->bound = false;
 }
 
 Object::Object(Array* verticies, Array* normals, Array* colors, Array* indicies){
@@ -69,6 +70,31 @@ Object::Object(Array* verticies, Array* normals, Array* colors, Array* indicies)
 	glGenBuffers(1, &this->NBO);
 	glGenBuffers(1, &this->EBO);
 	glGenBuffers(1, &this->CBO);
+	this->bound = false;
+}
+
+void Object::bind(void)
+{
+	int length; 
+	void* data;
+	if(this->bound)
+	{
+		return;
+	}
+	glBindVertexArray(this->VAO);
+
+	/*bind verticies array*/
+	data = this->verticies->getArray();
+	length = this->verticies->getLength():
+	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * length * 3, data, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
+
+	/*TODO: complete Binding*/
+	data = this->normals->getArray();
+	
+	this->bound = true;
 }
 
 /****************************

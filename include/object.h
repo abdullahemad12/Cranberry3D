@@ -23,10 +23,12 @@ class Object{
 		Array* normals;
 		Array* colors;
 		Array* indicies;
-
+		bool bound;
+		void bind(void);
 	public: 
 		Object(const char* filename);
 		Object(Array* verticies, Array* normals, Array* colors, Array* indicies);
+
 };
 
 
