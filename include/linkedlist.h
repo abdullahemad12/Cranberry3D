@@ -33,13 +33,14 @@ class Linkedlist
 	private:
 	Node* head;
 	int length;
+	void destroy(void);
 	public:
 	Linkedlist(void);
+	~Linkedlist(void);
 	void add(void* Object);
 	void add_to_front(void* Object);
 	void* delete_at(int index);
 	void* delete_object(void* object);
-	void destroy(void);
 	bool contains(void* object);
 	Node* getHead(void);
 	void* getAt(int i);

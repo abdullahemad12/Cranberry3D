@@ -31,7 +31,6 @@ void Linkedlist::add(void* object)
 		{
 			cur = cur->next;		
 		}
-
 		cur->next = newNode;
 	}
 	this->length++;
@@ -123,17 +122,20 @@ void* Linkedlist::delete_object(void* object)
 	return ret;
 }
 
-void Linkedlist::destroy()
+Linkedlist::~Linkedlist(void)
+{
+	this->destroy();
+}
+
+void Linkedlist::destroy(void)
 {
 	Node* cur = this->head;
 	while(cur != NULL)
 	{
 		Node* node = cur;
 		cur = cur->next;
-		free(node->Object);
 		delete node;
 	}
-	delete this;
 }
 
 bool Linkedlist::contains(void* object)
@@ -223,4 +225,25 @@ void Array::addObject(void* object)
 		arr[this->cursor++] = Bobject[ptr++];
 		object_size--;
 	}
+}
+
+
+int main(void)
+{
+
+	Linkedlist* ll = new Linkedlist();
+
+	for(int i = 0; i < 1000; i++)
+	{
+		int* x = new int();
+		*x = i;
+		ll->add((void*)x);
+	}
+
+	while(ll->getLength() > 0)
+	{
+		delete (int*)ll->delete_at(0);
+	}
+	delete ll->getHead();	
+	delete ll;
 }
