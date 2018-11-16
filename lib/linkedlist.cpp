@@ -182,6 +182,10 @@ int Linkedlist::getLength(void)
 
 Array* Linkedlist::toArray(size_t object_size)
 {
+	if(this->length <= 0)
+	{
+		return NULL;
+	}
 	Array* arr = new Array(this->length, object_size);
 	Node* cur = this->head;
 	while(cur != NULL)
@@ -225,25 +229,4 @@ void Array::addObject(void* object)
 		arr[this->cursor++] = Bobject[ptr++];
 		object_size--;
 	}
-}
-
-
-int main(void)
-{
-
-	Linkedlist* ll = new Linkedlist();
-
-	for(int i = 0; i < 1000; i++)
-	{
-		int* x = new int();
-		*x = i;
-		ll->add((void*)x);
-	}
-
-	while(ll->getLength() > 0)
-	{
-		delete (int*)ll->delete_at(0);
-	}
-	delete ll->getHead();	
-	delete ll;
 }

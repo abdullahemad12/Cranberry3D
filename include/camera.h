@@ -16,6 +16,7 @@ class Camera{
 		Camera(vec3 eye, vec3 up);
 		vec3 getEye(void);
 		vec3 getUp(void);
+		mat4 lookAt(void);
 
 };
 

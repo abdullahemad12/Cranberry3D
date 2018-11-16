@@ -13,29 +13,52 @@
 
 using namespace std ; 
 
-// This is a basic program to initiate a shader
-// The textFileRead function reads in a filename into a string
-// programerrors and shadererrors output compilation errors
-// initshaders initiates a vertex or fragment shader
-// initprogram initiates a program with vertex and fragment shaders
 
-string textFileRead (const char * filename) {
-	string str, ret = "" ; 
-	ifstream in ; 
-	in.open(filename) ; 
-	if (in.is_open()) {
-		getline (in, str) ; 
-		while (in) {
-			ret += str + "\n" ; 
-			getline (in, str) ; 
+/**
+  * EFFECTS: calculates the size of the file
+  * RETURNS: the file size in BYTES
+  * ADAPTED FROM: https://stackoverflow.com/a/238607
+  */
+size_t fsize(FILE* fp)
+{
+	fseek(fp, 0L, SEEK_END);
+	size_t sz = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+	return sz;
+}
+
+/**
+  * EFFECTS: loads a text file whose path is filename into memory
+  * REQUIRES: filename to be of an existing text file otherwise terminates the program
+  * MODIFIES: char** prog_ptr
+  * PARAMETERS:
+  * - const char* filename: the name of the file to be loaded into memory
+  * - char** prog_ptr: a pointer to String that will to the loaded text
+  */
+size_t load_text_file(const char* filename, char** prog_ptr)
+{
+	FILE* file = fopen(filename, "r");	
+	if(file == NULL)
+	{
+		printf("couldn't load the shader program: %s\n", filename);
+		exit(2);
+	}
+
+	size_t fs = fsize(file);
+	char* prog = (char*) malloc(sizeof(char) * (fs+2));
+	unsigned int strPTR = 0;
+	char c;
+	while(!feof(file))
+	{
+		c = fgetc(file);
+		if(c == EOF)
+		{
+			break;
 		}
-		//    cout << "Shader below\n" << ret << "\n" ; 
-		return ret ; 
+		prog[strPTR++] = c;		
 	}
-	else {
-		cerr << "Unable to Open File " << filename << "\n" ; 
-		throw 2 ; 
-	}
+	*prog_ptr = prog;
+	return strPTR;
 }
 
 void programerrors (const GLint program) {
@@ -62,7 +85,7 @@ GLuint initshaders (GLenum type, const char *filename)
 	// Using GLSL shaders, OpenGL book, page 679 
 
 	GLuint shader = glCreateShader(type) ; 
-	GLint compiled ; 
+	/*GLint compiled ; 
 	string str = textFileRead (filename) ; 
 	const GLchar * cstr = str.c_str() ; 
 	glShaderSource (shader, 1, &cstr, NULL) ; 
@@ -71,7 +94,7 @@ GLuint initshaders (GLenum type, const char *filename)
 	if (!compiled) { 
 		shadererrors (shader) ; 
 		throw 3 ; 
-	}
+	}*/
 	return shader ; 
 }
 

@@ -4,6 +4,10 @@
  * implementation of an Object in a 3D world     *
  *************************************************/
 
+/*
+ * Inherit this if you need to add more features to your object
+ *
+ */
 #include <object.h>
 #include <linkedlist.h>
 
@@ -37,10 +41,10 @@ Object::Object(const char* filename)
 	this->colors = colors->toArray(sizeof(float) * 3);
 	this->indicies = indicies->toArray(sizeof(int));
 
-	verticies->destroy();
-	normals->destroy();
-	colors->destroy();
-	indicies->destroy();
+	delete verticies;
+	delete normals;
+	delete colors;
+	delete indicies;
 
 
 	/***Done Parsing the file***/
@@ -69,7 +73,10 @@ Object::Object(Array* verticies, Array* normals, Array* colors, Array* indicies)
 	glGenBuffers(1, &this->VBO);
 	glGenBuffers(1, &this->NBO);
 	glGenBuffers(1, &this->EBO);
-	glGenBuffers(1, &this->CBO);
+	if(this->colors)
+	{
+		glGenBuffers(1, &this->CBO);
+	}
 	this->bound = false;
 }
 
@@ -85,16 +92,52 @@ void Object::bind(void)
 
 	/*bind verticies array*/
 	data = this->verticies->getArray();
-	length = this->verticies->getLength():
+	length = this->verticies->getLength();
 	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * length * 3, data, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
 
-	/*TODO: complete Binding*/
+	/*Bind Normal Array*/
 	data = this->normals->getArray();
+	length = this->normals->getLength();
+	glBindBuffer(GL_ARRAY_BUFFER, this->NBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * length * 3, data, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
+
+	/*bind Colors if any*/
+	
+	if(this->colors)
+	{
+		data = this->colors->getArray();
+		length = this->normals->getLength();
+		glBindBuffer(GL_ARRAY_BUFFER, this->CBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * length * 3, data, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
+	}
+
+	
+	/*bind the faces*/
+	data = this->indicies->getArray();
+	length = this->indicies->getLength();
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * length, data, GL_STATIC_DRAW);
+
+	/*unbind when done*/
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	
 	
 	this->bound = true;
+}
+
+
+void draw(void)
+{
+	
 }
 
 /****************************
