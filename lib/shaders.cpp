@@ -14,6 +14,14 @@
 using namespace std ; 
 
 
+
+/*************************
+  *                      *
+  *       helpers        *
+  *                      *
+  ************************/
+
+
 /**
   * EFFECTS: calculates the size of the file
   * RETURNS: the file size in BYTES
@@ -57,10 +65,16 @@ size_t load_text_file(const char* filename, char** prog_ptr)
 		}
 		prog[strPTR++] = c;		
 	}
+	prog[strPTR++] = '\0';
 	*prog_ptr = prog;
 	return strPTR;
 }
 
+
+/** 
+  * EFFECTS: logs any errors with loading the shaders program
+  * ADAPTED FROM: CS167 https://courses.edx.org/courses/course-v1:UCSanDiegoX+CSE167x+2T2018/information/
+  */
 void programerrors (const GLint program) {
 	GLint length ; 
 	GLchar * log ; 
@@ -70,6 +84,12 @@ void programerrors (const GLint program) {
 	cout << "Compile Error, Log Below\n" << log << "\n" ; 
 	delete [] log ; 
 }
+
+/**
+  * EFFECTS: log any compilation errors with the shaders 
+  * REQUIRES: shader to be compiled
+  * ADAPTED FROM: CS167 https://courses.edx.org/courses/course-v1:UCSanDiegoX+CSE167x+2T2018/information/
+  */
 void shadererrors (const GLint shader) {
 	GLint length ; 
 	GLchar * log ; 
@@ -80,23 +100,36 @@ void shadererrors (const GLint shader) {
 	delete [] log ; 
 }
 
+/**
+  * EFFECTS: loads the shader given its type and path
+  * RETURNS: a descriptor for the shader
+  * ADAPTED FROM: CS167 https://courses.edx.org/courses/course-v1:UCSanDiegoX+CSE167x+2T2018/information/
+  */ 
 GLuint initshaders (GLenum type, const char *filename) 
 {
 	// Using GLSL shaders, OpenGL book, page 679 
 
 	GLuint shader = glCreateShader(type) ; 
-	/*GLint compiled ; 
-	string str = textFileRead (filename) ; 
-	const GLchar * cstr = str.c_str() ; 
-	glShaderSource (shader, 1, &cstr, NULL) ; 
+	GLint compiled ; 
+	char* str = NULL;
+	load_text_file(filename, &str) ; 
+ 
+	glShaderSource (shader, 1,(const char**) &str, NULL) ; 
 	glCompileShader (shader) ; 
 	glGetShaderiv (shader, GL_COMPILE_STATUS, &compiled) ; 
 	if (!compiled) { 
 		shadererrors (shader) ; 
 		throw 3 ; 
-	}*/
+	}
+	free(str);
 	return shader ; 
 }
+
+/**
+  * EFFECTS: loads the shader program given its type and path
+  * RETURNS: a descriptor for the shader program
+  * ADAPTED FROM: CS167 https://courses.edx.org/courses/course-v1:UCSanDiegoX+CSE167x+2T2018/information/
+  */ 
 
 GLuint initprogram (GLuint vertexshader, GLuint fragmentshader) 
 {
