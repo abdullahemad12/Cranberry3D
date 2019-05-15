@@ -11,24 +11,31 @@
 using namespace std;
 class Object{
 	private:
+		const char* id;
 		GLuint VAO;
 		GLuint VBO;
 		GLuint NBO;
 		GLuint EBO;
 		GLuint CBO;
-		GLuint  vertexshader;
-		GLuint fragmentshader;
-		GLuint shaderprogram;
 		Array* verticies;
 		Array* normals;
 		Array* colors;
 		Array* indicies;
+
+		/*initial Transformation*/
+		vec3 initialTranslate;
+		float initialRotate; /*in degrees*/
+		vec3 rotationAxis;
+		vec3 initialScale;
 		bool bound;
+
+		/*functions*/
 		void bind(void);
 	public: 
-		Object(const char* filename);
-		Object(Array* verticies, Array* normals, Array* colors, Array* indicies);
-
+		Object(const char* id, Array* verticies, Array* normals, Array* colors, Array* indicies);
+		void setInitialTranslate(vec3 intialTranslate);
+		void setInitialRotate(float angle, vec3 axis);
+		void setInitailScale(vec3 scale);
 };
 
 
